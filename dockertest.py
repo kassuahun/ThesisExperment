@@ -1,4 +1,4 @@
-#import docker
+import docker
 
 SOURCE_IMAGE = ""
 NO_CPU = ''
@@ -15,7 +15,6 @@ testinglist = ["thesis_experment","prom_grafana.1.wli1f8ji1xbzrs099fwecsbbt", "p
 def generate_instance_name():
    listContainerName = getcontainerlist()
    #listContainerName = testinglist
-   
    #filter the containers in our experiment
    mycontainers = [name for name in listContainerName if CONTAINER_NAME in name]
    mycontainers.sort()
@@ -57,7 +56,6 @@ def listImages():
    for image in client.images.list():
       print("Images ID = ",image.id, "Image Name = ", image.name)
 
-
 client = docker.from_env()
 getcontainerlist()
 
@@ -65,3 +63,4 @@ getcontainerlist()
 
 print("All instances = ", testinglist)
 print("New instance Name = ", generate_instance_name())
+'''
