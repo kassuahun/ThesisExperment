@@ -33,7 +33,7 @@ def newcontainer():
    new_containername = generate_instance_name()
    #port = get_portNo()
    #container = client.containers.run("webhost", ["echo", "hello", "world from httpd"],ports={8085:80}, name=new_containername, detach=True)
-   container = client.containers.run("httpd", [],ports={"8095/tcp":8095}, name="kassahun151", detach=True, stdin_open=True,tty=True)
+   container = client.containers.run(new_containername, [],ports={"8095/tcp":8095}, name="kassahun151", detach=True, stdin_open=True,tty=True)
    print(container.id)
 
 def stopcontainers(containerID):
