@@ -5,6 +5,7 @@ NO_CPU = ''
 MEMORY_SIZE = ''
 
 CONTAINER_NAME="EXPERMENT"
+NO_NODES = 15
 
 testinglist = ["thesis_experment","prom_grafana.1.wli1f8ji1xbzrs099fwecsbbt", "prom_cadvisor.r7oqhkmdyy644stu8sxc7fv8l.fy3le2skald6zlycou23a9y9g"
                ,"prom_alertmanager.1.ra4p45cg4b1tug62eq8lbq9wo", "EXPERMENT101","EXPERMENT106"
@@ -26,11 +27,13 @@ def generate_instance_name():
    return newContainername 
 
 def newcontainer():
-   " docker run -dit --name thesis_experment -m 512m -p 8085:80 -v /index.html:/usr/local/apache2/htdocs/ httpd:2.4 "
-   container = client.containers.run("bfirsh/reticulate-splines", detach=True)
+   #" docker run -dit --name thesis_experment -m 512m -p 8085:80 -v /index.html:/usr/local/apache2/htdocs/ httpd:2.4 "
+   #container = client.containers.run("bfirsh/reticulate-splines", detach=True)
+
    new_containername = generate_instance_name()
    #port = get_portNo()
-   client.containers.run("httpd", ["echo", "hello", "world from httpd"],ports={8085:80}, name=new_containername)
+   #container = client.containers.run("webhost", ["echo", "hello", "world from httpd"],ports={8085:80}, name=new_containername, detach=True)
+   container = client.containers.run("httpd", [],ports={"8095/tcp":8095}, name="kassahun151", detach=True, stdin_open=True,tty=True)
    print(container.id)
 
 def stopcontainers(containerID):
