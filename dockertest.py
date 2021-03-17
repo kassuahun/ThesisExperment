@@ -1,9 +1,9 @@
 import docker
 
-SOURCE_IMAGE = "httpd"
+SOURCE_IMAGE = "webserver"
 NO_CPU = ''
 MEMORY_SIZE = ''
-PORT_RANGE = [9000,9050]
+PORT_RANGE = [9000,9100]
 USED_PORTS=[]
 
 CONTAINER_NAME="EXPERMENT"
@@ -94,7 +94,7 @@ def listImages():
 client = docker.from_env()
 mycontainers = [name for name in getcontainerlist() if CONTAINER_NAME in name]
 
-removecontainers(mycontainers)
+#removecontainers(mycontainers)
 
 getcontainerlist()
 for i in range(5):
@@ -102,8 +102,8 @@ for i in range(5):
 
 mycontainers = [name for name in getcontainerlist() if CONTAINER_NAME in name]
 print(mycontainers)
-removecontainers(mycontainers)
+
+#removecontainers(mycontainers)
 #removecontainers('EXPERMENT123')
 
-mycontainers = [name for name in getcontainerlist() if CONTAINER_NAME in name]
 print("After removal \n",mycontainers)
