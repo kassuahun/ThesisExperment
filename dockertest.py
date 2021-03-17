@@ -1,8 +1,10 @@
 import docker
 
-SOURCE_IMAGE = ""
+SOURCE_IMAGE = "httpd"
 NO_CPU = ''
 MEMORY_SIZE = ''
+PORT_RANGE = [9000,9050]
+USED_PORTS=[]
 
 CONTAINER_NAME="EXPERMENT"
 NO_NODES = 15
@@ -26,33 +28,61 @@ def generate_instance_name():
       newContainername = CONTAINER_NAME + str(101)
    return newContainername 
 
+def get_free_port():
+   for port in range(PORT_RANGE[0],PORT_RANGE[1]):
+      if port in USED_PORTS:
+         continue
+      else:
+         return port
+   return "Error: No free port in the range"
+
 def newcontainer():
    #" docker run -dit --name thesis_experment -m 512m -p 8085:80 -v /index.html:/usr/local/apache2/htdocs/ httpd:2.4 "
    #container = client.containers.run("bfirsh/reticulate-splines", detach=True)
-
    new_containername = generate_instance_name()
-   #port = get_portNo()
-   #container = client.containers.run("webhost", ["echo", "hello", "world from httpd"],ports={8085:80}, name=new_containername, detach=True)
-   container = client.containers.run(new_containername, [],ports={"8095/tcp":8095}, name="kassahun151", detach=True, stdin_open=True,tty=True)
-   print(container.id)
+   port = get_free_port()
+   if isinstance(port, str):
+      print(port)
+      return
+   else:
+      #container = client.containers.run("webhost", ["echo", "hello", "world from httpd"],ports={8085:80}, name=new_containername, detach=True)
+      container = client.containers.run(SOURCE_IMAGE, [],ports={port:8090}, name=new_containername, detach=True, stdin_open=True,tty=True)
+      print(container.id)
 
 def stopcontainers(containerID):
-   container = client.containers.get(containerID)
-   container.stop()
+   if isinstance(containerID, str):
+      container = client.containers.get(containerID)
+      container.stop()
+   else:
+      for id in containerID:
+         container = client.containers.get(id)
+         container.stop()
 
 def pausecontainers(containerID):
-   container = client.containers.get(containerID)
-   container.pause()
+   if isinstance(containerID, str):
+      container = client.containers.get(containerID)
+      container.pause()
+   else:
+      for id in containerID:
+         container = client.containers.get(id)
+         container.pause()
 
 def removecontainers(containerID):
-   container = client.containers.get(containerID)
-   container.remove()
+   if isinstance(containerID, str):
+      container = client.containers.get(containerID)
+      container.stop()
+      container.remove()
+   else:
+      for id in containerID:
+         container = client.containers.get(id)
+         container.stop()
+         container.remove()
 
 def getcontainerlist():
    containername =[]
    for container in client.containers.list():
       containername.append(container.name)
-      print("ID = ", container.id, "NAME=" ,container.name)
+      #print("ID = ", container.id, "NAME=" ,container.name)
    return containername
 
 def listImages():
@@ -61,9 +91,13 @@ def listImages():
 
 client = docker.from_env()
 getcontainerlist()
+for i in range(5):
+   newcontainer()
 
-'''
+mycontainers = [name for name in getcontainerlist() if CONTAINER_NAME in name]
+print(mycontainers)
+#removecontainers(mycontainers[10:])
+removecontainers('EXPERMENT123')
 
-print("All instances = ", testinglist)
-print("New instance Name = ", generate_instance_name())
-'''
+mycontainers = [name for name in getcontainerlist() if CONTAINER_NAME in name]
+print("After removal \n",mycontainers)
